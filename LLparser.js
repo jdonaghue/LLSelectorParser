@@ -1,25 +1,25 @@
 ﻿var COMBINATORS = {
-	'+': 0,
-	'>': 1,
-	'~': 2,
-	' ': 3
-}
-
-var EQ = '=';
-var LB = '[';
-var RB = ']';
-
-var PLUS = 0;
-var GT = 1;
-var TILDA = 2;
-var SPACE = 3;
-var COMBINATOR = 4;
-var PSEUDOEL = 5;
-var PSEUDOCLASS = 6;
-var ATTR = 7;
-var CLS = 8;
-var ID = 9;
-var TYPE = 10;
+		'+': 0,
+		'>': 1,
+		'~': 2,
+		' ': 3
+	},
+	EQ = '=',
+	LB = '[',
+	RB = ']',
+	PLUS = 0,
+	GT = 1,
+	TILDA = 2,
+	SPACE = 3,
+	COMBINATOR = 4,
+	PSEUDOEL = 5,
+	PSEUDOCLASS = 6,
+	ATTR = 7,
+	CLS = 8,
+	ID = 9,
+	TYPE = 10,
+	NOT = 11,
+	CONTAINS = 12;
 
 function error(message, ch) {
 	if (console && console.log) {
@@ -64,9 +64,26 @@ function parseAttribute(start, selector, obj) {
 	return selector.length - 1;
 }
 
+function parsePseudo(start, selector, obj) {
+	obj.val = '';	
+
+	for (var i = start; i < selector.length; i++) {
+		var c = selector[i];
+		
+		if (c == ')') {
+			obj.val = lexer(obj.val);
+			return i;
+		}
+
+		obj.val += c;
+	}
+	error('invalid attribute', start);
+	return selector.length - 1;
+}
+
 function lexer(selector) {
-	var groups = [];
-	var ss = [];
+	var groups = [],
+		selectorStack = [];
 
 	for (var i = 0, len = selector.length; i < len; i++) {
 		var c = selector[i],
@@ -74,14 +91,14 @@ function lexer(selector) {
 
 		if (c == ',') {
 			// GROUP
-			groups.push(ss.slice(0));
-			ss = [];
+			groups.push(selectorStack.slice(0));
+			selectorStack = [];
 			i = nextNonSpace(selector, i+1);
 		}
 		else if (c in COMBINATORS && cAhead != EQ) {
 			// COMBINATOR
-			if (!ss[ss.length] || ss[ss.length-1].type != COMBINATOR) {
-				ss.push({
+			if (!selectorStack[selectorStack.length] || selectorStack[selectorStack.length-1].type != COMBINATOR) {
+				selectorStack.push({
 					type: COMBINATOR,
 					val: c
 				});
@@ -90,7 +107,7 @@ function lexer(selector) {
 		}
 		else {
 			// SELECTOR
-			if (!ss[ss.length - 1] || ss[ss.length - 1].type == COMBINATOR || c == '[') {
+			if (selectorStack.length == 0 || selectorStack[selectorStack.length - 1].type == COMBINATOR || c in {'[':0, '.':1, '#':2, ':':3}) {
 				type = 'here is the type';
 				switch(c) {
 					case '.' : {
@@ -106,7 +123,25 @@ function lexer(selector) {
 							type = PSEUDOEL;
 						}
 						else {
-							type = PSEUDOCLASS;
+							if (selector.substr(i + 1, 3) == 'not') {
+								c = {
+									val: '',
+									op: 'NOT'
+								}
+								i = parsePseudo(i+5, selector, c)
+								type = NOT;
+							}
+							else if (selector.substr(i + 1, 8) == 'contains') {
+								c = {
+									val: '',
+									op: 'CONTAINS'
+								}
+								i = parsePseudo(i+10, selector, c);
+								type = CONTAINS;
+							}
+							else {
+								type = PSEUDOCLASS;
+							}
 						}
 
 						if (selector[i+2] == ':') {
@@ -130,17 +165,17 @@ function lexer(selector) {
 						break;
 					}
 				}
-				ss.push({
+				selectorStack.push({
 					type: type,
 					val: c
 				});
 			}
 			else {
-				ss[ss.length - 1].val += c;
+				selectorStack[selectorStack.length - 1].val += c;
 			}
 		}
 	}
 
-	groups.push(ss.slice(0));
+	groups.push(selectorStack.slice(0));
 	return groups;
 }
