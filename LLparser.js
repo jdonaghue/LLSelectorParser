@@ -64,15 +64,23 @@ function parseAttribute(start, selector, obj) {
 	return selector.length - 1;
 }
 
-function parsePseudo(start, selector, obj) {
-	obj.val = '';	
+function parseRecursivePseudo(start, selector, obj) {
+	obj.val = '';
+
+	var paranthCount = 1;	
 
 	for (var i = start; i < selector.length; i++) {
 		var c = selector[i];
+
+		if (c == '(') {
+			paranthCount++;
+		}
 		
 		if (c == ')') {
-			obj.val = lexer(obj.val);
-			return i;
+			if (--paranthCount == 0) {
+				obj.val = lexer(obj.val);
+				return i;
+			}
 		}
 
 		obj.val += c;
@@ -86,30 +94,40 @@ function lexer(selector) {
 		selectorStack = [];
 
 	for (var i = 0, len = selector.length; i < len; i++) {
-		var c = selector[i],
-			cAhead = selector[i + 1];
+		var character = selector[i],
+			characterAhead = selector[i + 1],
+			lastInStack = selectorStack[selectorStack.length-1];
 
-		if (c == ',') {
+
+		if (character == ',') {
 			// GROUP
 			groups.push(selectorStack.slice(0));
 			selectorStack = [];
 			i = nextNonSpace(selector, i+1);
 		}
-		else if (c in COMBINATORS && cAhead != EQ) {
+		else if (character in COMBINATORS 
+			&& characterAhead != EQ 
+			&& (lastInStack.type != PSEUDOCLASS 
+				|| lastInStack.val.indexOf('nth-child') == -1 
+				|| lastInStack.val[lastInStack.val.length-1] == ')')) {
+
 			// COMBINATOR
-			if (!selectorStack[selectorStack.length] || selectorStack[selectorStack.length-1].type != COMBINATOR) {
+			if (!lastInStack || lastInStack.type != COMBINATOR) {
 				selectorStack.push({
 					type: COMBINATOR,
-					val: c
+					val: character
 				});
 				i = nextNonSpace(selector, i+1);
 			}
 		}
 		else {
 			// SELECTOR
-			if (selectorStack.length == 0 || selectorStack[selectorStack.length - 1].type == COMBINATOR || c in {'[':0, '.':1, '#':2, ':':3}) {
+			if (selectorStack.length == 0 
+				|| lastInStack.type == COMBINATOR 
+				|| character in {'[':0, '.':1, '#':2, ':':3}) {
+				
 				type = 'here is the type';
-				switch(c) {
+				switch(character) {
 					case '.' : {
 						type = CLS;
 						break;
@@ -124,11 +142,11 @@ function lexer(selector) {
 						}
 						else {
 							if (selector.substr(i + 1, 3) == 'not') {
-								c = {
+								character = {
 									val: '',
 									op: 'NOT'
 								}
-								i = parsePseudo(i+5, selector, c)
+								i = parseRecursivePseudo(i+5, selector, character)
 								type = NOT;
 							}
 							else if (selector.substr(i + 1, 8) == 'contains') {
@@ -136,7 +154,7 @@ function lexer(selector) {
 									val: '',
 									op: 'CONTAINS'
 								}
-								i = parsePseudo(i+10, selector, c);
+								i = parseRecursivePseudo(i+10, selector, character);
 								type = CONTAINS;
 							}
 							else {
@@ -151,12 +169,12 @@ function lexer(selector) {
 					}
 					case '[': {
 						type = ATTR;
-						c = {
+						character = {
 							left: '',
 							right: '', 
 							op: ''
 						}
-						i = parseAttribute(i+1, selector, c);
+						i = parseAttribute(i+1, selector, character);
 						
 						break;
 					}
@@ -167,11 +185,11 @@ function lexer(selector) {
 				}
 				selectorStack.push({
 					type: type,
-					val: c
+					val: character
 				});
 			}
 			else {
-				selectorStack[selectorStack.length - 1].val += c;
+				lastInStack.val += character;
 			}
 		}
 	}
