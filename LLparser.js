@@ -19,7 +19,8 @@
 	ID = 9,
 	TYPE = 10,
 	NOT = 11,
-	CONTAINS = 12;
+	CONTAINS = 12,
+	NTH = 13;
 
 function error(message, ch) {
 	if (console && console.log) {
@@ -89,6 +90,22 @@ function parseRecursivePseudo(start, selector, obj) {
 	return selector.length - 1;
 }
 
+function parseNth(start, selector, obj) {
+	obj.val = '';
+
+	for (var i = start; i < selector.length; i++) {
+		var c = selector[i];
+		
+		if (c == ')') {
+			return i;
+		}
+
+		obj.val += c;
+	}
+	error('invalid attribute', start);
+	return selector.length - 1;
+}
+
 function lexer(selector) {
 	var groups = [],
 		selectorStack = [];
@@ -125,7 +142,7 @@ function lexer(selector) {
 			if (selectorStack.length == 0 
 				|| lastInStack.type == COMBINATOR 
 				|| character in {'[':0, '.':1, '#':2, ':':3}) {
-				
+
 				type = 'here is the type';
 				switch(character) {
 					case '.' : {
@@ -150,12 +167,20 @@ function lexer(selector) {
 								type = NOT;
 							}
 							else if (selector.substr(i + 1, 8) == 'contains') {
-								c = {
+								character = {
 									val: '',
 									op: 'CONTAINS'
 								}
 								i = parseRecursivePseudo(i+10, selector, character);
 								type = CONTAINS;
+							}
+							else if (selector.substr(i +1, 3) == 'nth') {
+								character= {
+									val: '',
+									op: 'NTH'
+								}
+								i = parseNth(i+11, selector, character);
+								type = NTH;
 							}
 							else {
 								type = PSEUDOCLASS;
@@ -163,7 +188,7 @@ function lexer(selector) {
 						}
 
 						if (selector[i+2] == ':') {
-							error('invalid pseudo class', i+2)
+							error('invalid pseudo class', i+2);
 						}
 						break;
 					}
