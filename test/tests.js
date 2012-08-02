@@ -46,149 +46,576 @@
 **/
 (function() {
 	test('basic universal selector', function() {
-		deepEqual([[{ type: LL.UNIV, val: '*'}]], LL.lex('*'), '* PASSED');
+		deepEqual(
+			LL.lex('*'),
+			[
+				[
+					{ type: LL.UNIV, val: '*' }
+				]
+			],
+			'* PASSED');
 	});
 
 	test('basic type selector', function() {
 		var selector = 'div';
-		deepEqual([[{ type: LL.TYPE, val: 'div'}]], LL.lex(selector), selector + ' PASSED');
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, val: 'div' }
+				]
+			], 
+			selector + ' PASSED');
 		
 		selector = 'body';
-		deepEqual([[{ type: LL.TYPE, val: 'body'}]], LL.lex(selector), selector + ' PASSED');
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, val: 'body' }
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = 'p';
-		deepEqual([[{ type: LL.TYPE, val: 'p'}]], LL.lex(selector), selector + ' PASSED');
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, val: 'p' }
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = 'br';
-		deepEqual([[{ type: LL.TYPE, val: 'br'}]], LL.lex(selector), selector + ' PASSED');
+		deepEqual(
+			LL.lex(selector),
+			[
+				[	
+					{ type: LL.TYPE, val: 'br' }
+				]
+			], 
+			selector + ' PASSED');
 	});
 
 	test('basic class selector', function() {
 		var selector = '.class';
-		deepEqual([[{ type: LL.CLS, val: '.class'}]], LL.lex(selector), selector + ' PASSED');
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.CLS, val: '.class' }
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class';
-		deepEqual([[{ type: LL.UNIV, val: '*'}, { type: LL.CLS, val: '.class'}]], LL.lex(selector), selector + ' PASSED');		
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' }, 
+					{ type: LL.CLS, val: '.class' }
+				]
+			], 
+			selector + ' PASSED');		
 
 		selector = 'div.class';
-		deepEqual([[{ type: LL.TYPE, val: 'div'}, { type: LL.CLS, val: '.class'}]], LL.lex(selector), selector + ' PASSED');		
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, val: 'div' }, 
+					{ type: LL.CLS, val: '.class' }
+				]
+			], 
+			selector + ' PASSED');		
 	});
 
 	test('basic attribute selector', function() {
 		var selector = '*[test=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.ATTR, val: {
-					op: '=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.ATTR, val: {
+						op: '=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '.class[test=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = 'div.class[test=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.TYPE, val: 'div'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.TYPE, val: 'div'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test~=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '~=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '~=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test^=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '^=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '^=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test$=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '$=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '$=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test*=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '*=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '*=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			], 
+			selector + ' PASSED');
 
 		selector = '*.class[test|=value]';
-		deepEqual([
+		deepEqual(
+			LL.lex(selector),
 			[
-				{ type: LL.UNIV, val: '*'}, 
-				{ type: LL.CLS, val: '.class'}, 
-				{ type: LL.ATTR, val: {
-					op: '|=',
-					left: 'test',
-					right: 'value'
-				}}
-			]
-		], LL.lex(selector), selector + ' PASSED');
+				[
+					{ type: LL.UNIV, val: '*'}, 
+					{ type: LL.CLS, val: '.class'}, 
+					{ type: LL.ATTR, val: {
+						op: '|=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			],
+			selector + ' PASSED');
 	});
+
+	test('basic pseudo class selector', function() {
+		var selector = '*:root';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':root' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:first-child';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':first-child'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:last-child';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':last-child'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:only-child';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':only-child'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:first-of-type';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':first-of-type'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:last-of-type';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':last-of-type'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:only-of-type';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':only-of-type'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:empty';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':empty'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:link';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':link'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:visited';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':visited'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:active';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':active'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:hover';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':hover'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:focus';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':focus'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:target';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':target'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:lang(fr)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':lang(fr)'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:enabled';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':enabled'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:disabled';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':disabled'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:checked';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSCLS, val: ':checked'}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(n)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: 'n'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(n+1)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: 'n+1'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(2n+1)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: '2n+1'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(even)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: 'even'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(odd)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: 'odd'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(10n-1)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.NTH, val: {
+						op: 'NTH',
+						val: '10n-1'
+					}}
+				]
+			], 
+			selector + ' PASSED');
+	});
+
+	test('basic psuedo element selector', function() {
+		var selector = '*::first-line';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSEL, val: '::first-line' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*::first-letter';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSEL, val: '::first-letter' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*::before';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSEL, val: '::before' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*::after';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, val: '*' },
+					{ type: LL.PSEL, val: '::after' }
+				]
+			], 
+			selector + ' PASSED');
+	});
+
+	// test('not selector', function() {
+
+	// });
+
+	// test('contains selector', function() {
+		
+	// });
+
+	// test('group selector', function() {
+		
+	// });
 
 }());

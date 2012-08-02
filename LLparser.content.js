@@ -1,5 +1,3 @@
-(function() {
-	
 ﻿
 	window.LL = window.LL || {};
 
@@ -230,5 +228,3 @@
 		groups.push(selectorStack.slice(0));
 		return groups;
 	}
-
-}());
