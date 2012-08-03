@@ -1,7 +1,6 @@
 ﻿
-	window.LL = window.LL || {};
 
-	LL = {
+	var LL = {
 		UNIV: 0,
 		TYPE: 1,
 		ID: 2,
@@ -66,7 +65,7 @@
 	}
 
 	function parseRecursivePseudo(start, selector, obj) {
-		obj.val = '';
+		obj.value = '';
 
 		var paranthCount = 1;	
 
@@ -79,19 +78,19 @@
 			
 			if (c == ')') {
 				if (--paranthCount == 0) {
-					obj.val = lexer(obj.val);
+					obj.value = lexer(obj.value);
 					return i;
 				}
 			}
 
-			obj.val += c;
+			obj.value += c;
 		}
 		error('invalid attribute', start);
 		return selector.length - 1;
 	}
 
 	function parseNth(start, selector, obj) {
-		obj.val = '';
+		obj.value = '';
 
 		for (var i = start; i < selector.length; i++) {
 			var c = selector[i];
@@ -100,13 +99,13 @@
 				return i;
 			}
 
-			obj.val += c;
+			obj.value += c;
 		}
 		error('invalid attribute', start);
 		return selector.length - 1;
 	}
 
-	window.LL.lex = function lexer(selector) {
+	LL.lex = function lexer(selector) {
 		var groups = [],
 			selectorStack = [];
 
@@ -125,14 +124,14 @@
 			else if (character in COMBINATORS 
 				&& characterAhead != '='
 				&& (lastInStack.type != LL.PSCLS 
-					|| lastInStack.val.indexOf('nth-child') == -1 
-					|| lastInStack.val[lastInStack.val.length-1] == ')')) {
+					|| lastInStack.value.indexOf('nth-child') == -1 
+					|| lastInStack.value[lastInStack.value.length-1] == ')')) {
 
 				// COMBINATOR
 				if (!lastInStack || lastInStack.type != LL.COMB) {
 					selectorStack.push({
 						type: LL.COMB,
-						val: character
+						value: character
 					});
 					i = nextNonSpace(selector, i+1);
 				}
@@ -166,7 +165,7 @@
 							else {
 								if (selector.substr(i + 1, 3) == 'not') {
 									character = {
-										val: '',
+										value: '',
 										op: 'NOT'
 									}
 									i = parseRecursivePseudo(i+5, selector, character)
@@ -174,7 +173,7 @@
 								}
 								else if (selector.substr(i + 1, 8) == 'contains') {
 									character = {
-										val: '',
+										value: '',
 										op: 'CONTAINS'
 									}
 									i = parseRecursivePseudo(i+10, selector, character);
@@ -182,7 +181,7 @@
 								}
 								else if (selector.substr(i +1, 3) == 'nth') {
 									character= {
-										val: '',
+										value: '',
 										op: 'NTH'
 									}
 									i = parseNth(i+11, selector, character);
@@ -216,11 +215,11 @@
 					}
 					selectorStack.push({
 						type: type,
-						val: character
+						value: character
 					});
 				}
 				else {
-					lastInStack.val += character;
+					lastInStack.value += character;
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 /**
 	http://www.w3.org/TR/css3-selectors/#selectors
  
- 	Pattern				Meaning	
+ 	Pattern					Meaning	
 	E						an element of type E	
 	E[foo]					an E element with a "foo" attribute	
 	E[foo="bar"]			an E element whose "foo" attribute value is exactly equal to "bar"	
@@ -50,7 +50,7 @@
 			LL.lex('*'),
 			[
 				[
-					{ type: LL.UNIV, val: '*' }
+					{ type: LL.UNIV, value: '*' }
 				]
 			],
 			'* PASSED');
@@ -62,7 +62,7 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.TYPE, val: 'div' }
+					{ type: LL.TYPE, value: 'div' }
 				]
 			], 
 			selector + ' PASSED');
@@ -72,7 +72,7 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.TYPE, val: 'body' }
+					{ type: LL.TYPE, value: 'body' }
 				]
 			], 
 			selector + ' PASSED');
@@ -82,7 +82,7 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.TYPE, val: 'p' }
+					{ type: LL.TYPE, value: 'p' }
 				]
 			], 
 			selector + ' PASSED');
@@ -92,7 +92,7 @@
 			LL.lex(selector),
 			[
 				[	
-					{ type: LL.TYPE, val: 'br' }
+					{ type: LL.TYPE, value: 'br' }
 				]
 			], 
 			selector + ' PASSED');
@@ -104,7 +104,7 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.CLS, val: '.class' }
+					{ type: LL.CLS, value: '.class' }
 				]
 			], 
 			selector + ' PASSED');
@@ -114,8 +114,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' }, 
-					{ type: LL.CLS, val: '.class' }
+					{ type: LL.UNIV, value: '*' }, 
+					{ type: LL.CLS, value: '.class' }
 				]
 			], 
 			selector + ' PASSED');		
@@ -125,8 +125,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.TYPE, val: 'div' }, 
-					{ type: LL.CLS, val: '.class' }
+					{ type: LL.TYPE, value: 'div' }, 
+					{ type: LL.CLS, value: '.class' }
 				]
 			], 
 			selector + ' PASSED');		
@@ -138,8 +138,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.ATTR, value: {
 						op: '=',
 						left: 'test',
 						right: 'value'
@@ -153,8 +153,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '=',
 						left: 'test',
 						right: 'value'
@@ -168,9 +168,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '=',
 						left: 'test',
 						right: 'value'
@@ -184,9 +184,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.TYPE, val: 'div'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.TYPE, value: 'div'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '=',
 						left: 'test',
 						right: 'value'
@@ -200,9 +200,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '~=',
 						left: 'test',
 						right: 'value'
@@ -216,9 +216,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '^=',
 						left: 'test',
 						right: 'value'
@@ -232,9 +232,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '$=',
 						left: 'test',
 						right: 'value'
@@ -248,9 +248,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '*=',
 						left: 'test',
 						right: 'value'
@@ -264,9 +264,9 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*'}, 
-					{ type: LL.CLS, val: '.class'}, 
-					{ type: LL.ATTR, val: {
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
 						op: '|=',
 						left: 'test',
 						right: 'value'
@@ -282,8 +282,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':root' }
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':root' }
 				]
 			], 
 			selector + ' PASSED');
@@ -293,8 +293,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':first-child'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':first-child'}
 				]
 			], 
 			selector + ' PASSED');
@@ -304,8 +304,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':last-child'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':last-child'}
 				]
 			], 
 			selector + ' PASSED');
@@ -315,8 +315,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':only-child'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':only-child'}
 				]
 			], 
 			selector + ' PASSED');
@@ -326,8 +326,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':first-of-type'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':first-of-type'}
 				]
 			], 
 			selector + ' PASSED');
@@ -337,8 +337,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':last-of-type'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':last-of-type'}
 				]
 			], 
 			selector + ' PASSED');
@@ -348,8 +348,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':only-of-type'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':only-of-type'}
 				]
 			], 
 			selector + ' PASSED');
@@ -359,8 +359,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':empty'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':empty'}
 				]
 			], 
 			selector + ' PASSED');
@@ -370,8 +370,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':link'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':link'}
 				]
 			], 
 			selector + ' PASSED');
@@ -381,8 +381,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':visited'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':visited'}
 				]
 			], 
 			selector + ' PASSED');
@@ -392,8 +392,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':active'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':active'}
 				]
 			], 
 			selector + ' PASSED');
@@ -403,8 +403,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':hover'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':hover'}
 				]
 			], 
 			selector + ' PASSED');
@@ -414,8 +414,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':focus'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':focus'}
 				]
 			], 
 			selector + ' PASSED');
@@ -425,8 +425,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':target'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':target'}
 				]
 			], 
 			selector + ' PASSED');
@@ -436,8 +436,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':lang(fr)'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':lang(fr)'}
 				]
 			], 
 			selector + ' PASSED');
@@ -447,8 +447,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':enabled'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':enabled'}
 				]
 			], 
 			selector + ' PASSED');
@@ -458,8 +458,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':disabled'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':disabled'}
 				]
 			], 
 			selector + ' PASSED');
@@ -469,8 +469,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSCLS, val: ':checked'}
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSCLS, value: ':checked'}
 				]
 			], 
 			selector + ' PASSED');
@@ -480,10 +480,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: 'n'
+						value: 'n'
 					}}
 				]
 			], 
@@ -494,10 +494,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: 'n+1'
+						value: 'n+1'
 					}}
 				]
 			], 
@@ -508,10 +508,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: '2n+1'
+						value: '2n+1'
 					}}
 				]
 			], 
@@ -522,10 +522,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: 'even'
+						value: 'even'
 					}}
 				]
 			], 
@@ -536,10 +536,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: 'odd'
+						value: 'odd'
 					}}
 				]
 			], 
@@ -550,10 +550,10 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.NTH, val: {
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: {
 						op: 'NTH',
-						val: '10n-1'
+						value: '10n-1'
 					}}
 				]
 			], 
@@ -566,8 +566,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSEL, val: '::first-line' }
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSEL, value: '::first-line' }
 				]
 			], 
 			selector + ' PASSED');
@@ -577,8 +577,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSEL, val: '::first-letter' }
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSEL, value: '::first-letter' }
 				]
 			], 
 			selector + ' PASSED');
@@ -588,8 +588,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSEL, val: '::before' }
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSEL, value: '::before' }
 				]
 			], 
 			selector + ' PASSED');
@@ -599,8 +599,8 @@
 			LL.lex(selector),
 			[
 				[
-					{ type: LL.UNIV, val: '*' },
-					{ type: LL.PSEL, val: '::after' }
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.PSEL, value: '::after' }
 				]
 			], 
 			selector + ' PASSED');
