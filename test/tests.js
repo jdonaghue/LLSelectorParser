@@ -46,6 +46,8 @@
 **/
 (function() {
 	test('basic universal selector', function() {
+		expect(1);
+
 		deepEqual(
 			LL.lex('*'),
 			[
@@ -57,6 +59,8 @@
 	});
 
 	test('basic type selector', function() {
+		expect(4);
+
 		var selector = 'div';
 		deepEqual(
 			LL.lex(selector),
@@ -99,6 +103,8 @@
 	});
 
 	test('basic class selector', function() {
+		expect(3);
+
 		var selector = '.class';
 		deepEqual(
 			LL.lex(selector),
@@ -133,6 +139,8 @@
 	});
 
 	test('basic attribute selector', function() {
+		expect(9);
+
 		var selector = '*[test=value]';
 		deepEqual(
 			LL.lex(selector),
@@ -277,6 +285,8 @@
 	});
 
 	test('basic pseudo class selector', function() {
+		expect(24);
+
 		var selector = '*:root';
 		deepEqual(
 			LL.lex(selector),
@@ -561,6 +571,8 @@
 	});
 
 	test('basic psuedo element selector', function() {
+		expect(4);
+
 		var selector = '*::first-line';
 		deepEqual(
 			LL.lex(selector),
@@ -617,5 +629,82 @@
 	// test('group selector', function() {
 		
 	// });
+
+	test('combinator', function() {
+		expect(6);
+
+		var selector = 'div div';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: ' ' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div + div';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: '+' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div ~ div';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: '~' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div > div';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: '>' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div+div';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: '+' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div +\t\rdiv';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ type: LL.COMB, value: '+' },
+					{ type: LL.TYPE, value: 'div' }
+				]
+			], 
+			'div +\\t\\rdiv PASSED');
+
+	});
 
 }());

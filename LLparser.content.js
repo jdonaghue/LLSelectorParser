@@ -1,6 +1,6 @@
 ﻿
 
-	var LL = {
+	var _LL = {
 		UNIV: 0,
 		TYPE: 1,
 		ID: 2,
@@ -14,7 +14,7 @@
 		NTH: 10
 	};
 
-	var	COMBINATORS = {
+	var	_COMBINATORS = {
 			'+': 0,
 			'>': 1,
 			'~': 2,
@@ -29,7 +29,7 @@
 
 	function nextNonSpace(selector, start) {
 		for (var i = start; i < selector.length; i++) {
-			if (selector[i] != ' ') {
+			if (selector[i] != ' ' && selector[i] != '\n' && selector[i] != '\r' && selector[i] != '\t') {
 				return i-1;
 			}
 		}
@@ -105,7 +105,7 @@
 		return selector.length - 1;
 	}
 
-	LL.lex = function lexer(selector) {
+	_LL.lex = function lexer(selector) {
 		var groups = [],
 			selectorStack = [];
 
@@ -121,7 +121,7 @@
 				selectorStack = [];
 				i = nextNonSpace(selector, i+1);
 			}
-			else if (character in COMBINATORS 
+			else if (character in _COMBINATORS 
 				&& characterAhead != '='
 				&& (lastInStack.type != LL.PSCLS 
 					|| lastInStack.value.indexOf('nth-child') == -1 
@@ -129,11 +129,16 @@
 
 				// COMBINATOR
 				if (!lastInStack || lastInStack.type != LL.COMB) {
+					i = nextNonSpace(selector, i+1);
+
+					if (selector[i+1] in _COMBINATORS) {
+						character = selector[i+1];
+						i = nextNonSpace(selector, i+2);
+					}
 					selectorStack.push({
 						type: LL.COMB,
 						value: character
-					});
-					i = nextNonSpace(selector, i+1);
+					});					
 				}
 			}
 			else {
