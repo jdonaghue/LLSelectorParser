@@ -52,11 +52,11 @@
 				if (c in {'+':0, '~': 1, '=': 2, '$': 3, '|': 4, '^': 5, '*': 6}) {
 					obj.op += c;
 				}
-				else {
+				else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t') {
 					obj.left += c;
 				}
 			}
-			else {
+			else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t') {
 				obj.right += c;
 			}
 		}

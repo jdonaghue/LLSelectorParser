@@ -139,7 +139,7 @@
 	});
 
 	test('basic attribute selector', function() {
-		expect(9);
+		expect(12);
 
 		var selector = '*[test=value]';
 		deepEqual(
@@ -282,6 +282,54 @@
 				]
 			],
 			selector + ' PASSED');
+
+		selector = '*.class[test \r|=value]';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
+						op: '|=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			],
+			'*.class[test \\r|=value] PASSED');
+
+		selector = '*.class[test \r|=\t \rvalue]';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
+						op: '|=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			],
+			'*.class[test \\r|=\\t \\rvalue] PASSED');
+
+		selector = '*.class[ test \r|=\t \rvalue]';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, value: '*'}, 
+					{ type: LL.CLS, value: '.class'}, 
+					{ type: LL.ATTR, value: {
+						op: '|=',
+						left: 'test',
+						right: 'value'
+					}}
+				]
+			],
+			'*.class[ test \\r|=\\t \\rvalue] PASSED');
 	});
 
 	test('basic pseudo class selector', function() {
