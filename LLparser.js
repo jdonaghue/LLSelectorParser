@@ -125,12 +125,12 @@
 			}
 			else if (character in _COMBINATORS 
 				&& characterAhead != '='
-				&& (lastInStack.type != LL.PSCLS 
+				&& (lastInStack.type != _LL.PSCLS 
 					|| lastInStack.value.indexOf('nth-child') == -1 
 					|| lastInStack.value[lastInStack.value.length-1] == ')')) {
 
 				// COMBINATOR
-				if (!lastInStack || lastInStack.type != LL.COMB) {
+				if (!lastInStack || lastInStack.type != _LL.COMB) {
 					i = nextNonSpace(selector, i+1);
 
 					if (selector[i+1] in _COMBINATORS) {
@@ -138,7 +138,7 @@
 						i = nextNonSpace(selector, i+2);
 					}
 					selectorStack.push({
-						type: LL.COMB,
+						type: _LL.COMB,
 						value: character
 					});					
 				}
@@ -147,27 +147,27 @@
 				// SELECTOR
 				var type;
 				if (selectorStack.length == 0 
-					|| lastInStack.type == LL.COMB
+					|| lastInStack.type == _LL.COMB
 					|| character in { '[':0, '.':1, '#':2, '*':3 }
 					|| (character == ':'
 						&& selector[i-1] != ':')) {
 
 					switch(character) {
 						case '*' : {
-							type = LL.UNIV;
+							type = _LL.UNIV;
 							break;
 						}
 						case '.' : {
-							type = LL.CLS;
+							type = _LL.CLS;
 							break;
 						}
 						case '#': {
-							type = LL.ID;
+							type = _LL.ID;
 							break;
 						}
 						case ':': {
 							if (selector[i+1] == ':') {
-								type = LL.PSEL;
+								type = _LL.PSEL;
 							}
 							else {
 								if (selector.substr(i + 1, 3) == 'not') {
@@ -176,7 +176,7 @@
 										op: 'NOT'
 									}
 									i = parseRecursivePseudo(i+5, selector, character)
-									type = LL.NOT;
+									type = _LL.NOT;
 								}
 								else if (selector.substr(i + 1, 8) == 'contains') {
 									character = {
@@ -184,7 +184,7 @@
 										op: 'CONTAINS'
 									}
 									i = parseRecursivePseudo(i+10, selector, character);
-									type = LL.CONT;
+									type = _LL.CONT;
 								}
 								else if (selector.substr(i +1, 3) == 'nth') {
 									character= {
@@ -192,10 +192,10 @@
 										op: 'NTH'
 									}
 									i = parseNth(i+11, selector, character);
-									type = LL.NTH;
+									type = _LL.NTH;
 								}
 								else {
-									type = LL.PSCLS;
+									type = _LL.PSCLS;
 								}
 							}
 
@@ -205,7 +205,7 @@
 							break;
 						}
 						case '[': {
-							type = LL.ATTR;
+							type = _LL.ATTR;
 							character = {
 								left: '',
 								right: '', 
@@ -216,7 +216,7 @@
 							break;
 						}
 						default: {
-							type = LL.TYPE;
+							type = _LL.TYPE;
 							break;
 						}
 					}
