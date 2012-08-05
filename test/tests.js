@@ -333,7 +333,7 @@
 	});
 
 	test('basic pseudo class selector', function() {
-		expect(24);
+		expect(25);
 
 		var selector = '*:root';
 		deepEqual(
@@ -539,10 +539,18 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: 'n'
-					}}
+					{ type: LL.NTH, value: 'n' }
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = '*:nth-child(10)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.UNIV, value: '*' },
+					{ type: LL.NTH, value: '10' }
 				]
 			], 
 			selector + ' PASSED');
@@ -553,10 +561,7 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: 'n+1'
-					}}
+					{ type: LL.NTH, value: 'n+1' }
 				]
 			], 
 			selector + ' PASSED');
@@ -567,10 +572,7 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: '2n+1'
-					}}
+					{ type: LL.NTH, value: '2n+1' }
 				]
 			], 
 			selector + ' PASSED');
@@ -581,10 +583,7 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: 'even'
-					}}
+					{ type: LL.NTH, value: 'even' }
 				]
 			], 
 			selector + ' PASSED');
@@ -595,10 +594,7 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: 'odd'
-					}}
+					{ type: LL.NTH, value: 'odd' }
 				]
 			], 
 			selector + ' PASSED');
@@ -609,10 +605,7 @@
 			[
 				[
 					{ type: LL.UNIV, value: '*' },
-					{ type: LL.NTH, value: {
-						op: 'NTH',
-						value: '10n-1'
-					}}
+					{ type: LL.NTH, value: '10n-1' }
 				]
 			], 
 			selector + ' PASSED');

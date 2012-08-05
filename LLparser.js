@@ -192,6 +192,7 @@
 										op: 'NTH'
 									}
 									i = parseNth(i+11, selector, character);
+									character = character.value;
 									type = _LL.NTH;
 								}
 								else {
