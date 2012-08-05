@@ -659,9 +659,71 @@
 			selector + ' PASSED');
 	});
 
-	// test('not selector', function() {
+	test('not selector', function() {
+		expect(3);
 
-	// });
+		var selector = 'div:not(a)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.NOT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'a' },
+							] 
+						]
+					}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div:not(a[test=value])';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.NOT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'a' },
+								{ type: LL.ATTR, value: {
+									op: '=',
+									left: 'test',
+									right: 'value'
+								}}
+							] 
+						]
+					}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div:not(div > \r\t*:nth-child(2n+1))';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.NOT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'div' },
+								{ type: LL.COMB, value: '>' },
+								{ type: LL.UNIV, value: '*' },
+								{ type: LL.NTH, value: '2n+1' }
+							] 
+						]
+					}
+				]
+			], 
+			'div:not(div > \\r\\t*:nth-child(2n+1))' + ' PASSED');
+	});
 
 	// test('contains selector', function() {
 		
