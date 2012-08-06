@@ -696,7 +696,7 @@
 									left: 'test',
 									right: 'value'
 								}}
-							] 
+							]
 						]
 					}
 				]
@@ -725,13 +725,75 @@
 			'div:not(div > \\r\\t*:nth-child(2n+1))' + ' PASSED');
 	});
 
-	// test('contains selector', function() {
-		
-	// });
+	test('contains selector', function() {
+		expect(3);
 
-	// test('group selector', function() {
-		
-	// });
+		var selector = 'div:contains(a)';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.CONT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'a' },
+							] 
+						]
+					}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div:contains(a[test=value])';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.CONT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'a' },
+								{ type: LL.ATTR, value: {
+									op: '=',
+									left: 'test',
+									right: 'value'
+								}}
+							]
+						]
+					}
+				]
+			], 
+			selector + ' PASSED');
+
+		selector = 'div:contains(div > \r\t*:nth-child(2n+1))';
+		deepEqual(
+			LL.lex(selector),
+			[
+				[
+					{ type: LL.TYPE, value: 'div' },
+					{ 
+						type: LL.CONT, value: 
+						[
+							[
+								{ type: LL.TYPE, value: 'div' },
+								{ type: LL.COMB, value: '>' },
+								{ type: LL.UNIV, value: '*' },
+								{ type: LL.NTH, value: '2n+1' }
+							] 
+						]
+					}
+				]
+			], 
+			'div:not(div > \\r\\t*:nth-child(2n+1))' + ' PASSED');
+	});
+
+	test('group selector', function() {
+		expect(0);
+	});
 
 	test('combinator', function() {
 		expect(6);
@@ -807,7 +869,6 @@
 				]
 			], 
 			'div +\\t\\rdiv PASSED');
-
 	});
 
 }());
