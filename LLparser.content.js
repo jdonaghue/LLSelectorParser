@@ -146,7 +146,7 @@
 				var type;
 				if (selectorStack.length == 0 
 					|| lastInStack.type == _LL.COMB
-					|| character in { '[':0, '.':1, '#':2, '*':3 }
+					|| character in { '[':0, '.':1, '#':2, '*':3, '\\':4 }
 					|| (character == ':'
 						&& selector[i-1] != ':')) {
 
@@ -214,6 +214,12 @@
 							}
 							i = parseAttribute(i+1, selector, character);
 							
+							break;
+						}
+						case '\\': {
+							type = _LL.TYPE;
+							i = i+1;
+							character = selector[i];
 							break;
 						}
 						default: {
