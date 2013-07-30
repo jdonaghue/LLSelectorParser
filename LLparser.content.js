@@ -10,7 +10,7 @@
 		PSEL: 6,
 		PSCLS: 7,
 		NOT: 8,
-		CONT: 9,
+		HAS: 9,
 		NTH: 10
 	};
 
@@ -39,12 +39,18 @@
 	function parseAttribute(start, selector, obj) {
 		obj.left = '';
 		obj.right = '';
-		obj.op
+		obj.op = '';
+
+		var insideQuotes = false;
 
 		for (var i = start; i < selector.length; i++) {
 			var c = selector[i];
+
+			if (c == '\'' || c == '"') {
+				insideQuotes = !insideQuotes;
+			}
 			
-			if (c == ']') {
+			if (!insideQuotes && c == ']') {
 				return i;
 			}
 
@@ -52,11 +58,11 @@
 				if (c in {'+':0, '~': 1, '=': 2, '$': 3, '|': 4, '^': 5, '*': 6}) {
 					obj.op += c;
 				}
-				else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t') {
+				else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\\') {
 					obj.left += c;
 				}
 			}
-			else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t') {
+			else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\'' && c != '"') {
 				obj.right += c;
 			}
 		}
@@ -64,7 +70,7 @@
 		return selector.length - 1;
 	}
 
-	function parseRecursivePseudo(start, selector, obj) {
+	function parseRecursivePseudo(start, selector, obj, preventRecursiveLex) {
 		obj.value = '';
 
 		var paranthCount = 1;	
@@ -78,7 +84,9 @@
 			
 			if (c == ')') {
 				if (--paranthCount == 0) {
-					obj.value = _LL.lex(obj.value);
+					if (!preventRecursiveLex) {
+						obj.value = _LL.lex(obj.value);
+					}
 					return i;
 				}
 			}
@@ -109,6 +117,9 @@
 		var groups = [],
 			selectorStack = [];
 
+		// first trim the selector
+		selector = selector.replace(/(^\s+|\s+$)/g, '');
+
 		for (var i = 0, len = selector.length; i < len; i++) {
 			var character = selector[i],
 				characterAhead = selector[i + 1],
@@ -123,6 +134,7 @@
 			}
 			else if (character in _COMBINATORS 
 				&& characterAhead != '='
+				&& selector[nextNonSpace(selector, i+1) + 1] != ','
 				&& (lastInStack.type != _LL.PSCLS 
 					|| lastInStack.value.indexOf('nth-child') == -1 
 					|| lastInStack.value[lastInStack.value.length-1] == ')')) {
@@ -146,6 +158,7 @@
 				var type;
 				if ((selectorStack.length == 0 
 					|| lastInStack.type == _LL.COMB
+					|| lastInStack.type == _LL.ATTR
 					|| character in { '[':0, '.':1, '#':2, '*':3, '\\':4 }
 					|| (character == ':'
 						&& selector[i-1] != ':'))
@@ -183,9 +196,21 @@
 										value: '',
 										op: 'CONTAINS'
 									}
+									i = parseRecursivePseudo(i+10, selector, character, true);
+									character = {
+										value: ':contains',
+										content: character.value.replace(/['"]/g, '')
+									}
+									type = _LL.PSCLS;
+								}
+								else if (selector.substr(i + 1, 3) == 'has') {
+									character = {
+										value: '',
+										op: 'HAS'
+									}
 									i = parseRecursivePseudo(i+10, selector, character);
 									character = character.value;
-									type = _LL.CONT;
+									type = _LL.HAS;
 								}
 								else if (selector.substr(i +1, 3) == 'nth') {
 									character= {
@@ -222,17 +247,29 @@
 							break;
 						}
 					}
-					selectorStack.push({
-						type: type,
-						value: character
-					});
+					if (character.content) {
+						selectorStack.push({
+							type: type,
+							value: character.value || character,
+							content: character.content
+						});
+					}
+					else {
+						selectorStack.push({
+							type: type,
+							value: character
+						});
+					}
 				}
 				else {
 					if (character == '\\') {
 						i++;
-						character = selector[i];
+						character = character + selector[i];
 					}
-					lastInStack.value += character;
+					
+					if (character != ' ' && character != '\n' && character != '\r' && character != '\t') {
+						lastInStack.value += character;
+					}
 				}
 			}
 		}
