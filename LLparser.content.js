@@ -46,24 +46,30 @@
 		for (var i = start; i < selector.length; i++) {
 			var c = selector[i];
 
-			if (c == '\'' || c == '"') {
-				insideQuotes = !insideQuotes;
-			}
-			
 			if (!insideQuotes && c == ']') {
 				return i;
 			}
 
-			if (obj.op.indexOf('=') == -1) {
-				if (c in {'+':0, '~': 1, '=': 2, '$': 3, '|': 4, '^': 5, '*': 6}) {
-					obj.op += c;
-				}
-				else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\\') {
-					obj.left += c;
-				}
+			if (c == '\'' || c == '"') {
+
+				insideQuotes = !insideQuotes;
 			}
-			else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\'' && c != '"') {
-				obj.right += c;
+			else {
+
+				if (insideQuotes) {
+					obj.right += c;
+				}
+				else if (obj.op.indexOf('=') == -1) {
+					if (c in {'+':0, '~': 1, '=': 2, '$': 3, '|': 4, '^': 5, '*': 6}) {
+						obj.op += c;
+					}
+					else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\\') {
+						obj.left += c;
+					}
+				}
+				else if (c != ' ' && c!= '\n' && c != '\r' && c != '\t' && c != '\'' && c != '"') {
+					obj.right += c;
+				}
 			}
 		}
 		error('invalid attribute', start);
@@ -208,18 +214,73 @@
 										value: '',
 										op: 'HAS'
 									}
-									i = parseRecursivePseudo(i+10, selector, character);
+									i = parseRecursivePseudo(i+5, selector, character);
 									character = character.value;
 									type = _LL.HAS;
 								}
+								else if (selector.substr(i + 1, 4) == 'lang') {
+									character = {
+										value: '',
+										op: 'LANG'
+									}
+									i = parseRecursivePseudo(i+6, selector, character, true);
+									character = {
+										value: ':lang',
+										content: character.value.replace(/['"]/g, '')
+									}
+									type = _LL.PSCLS;
+								}
 								else if (selector.substr(i +1, 3) == 'nth') {
-									character= {
+									var nth = selector.substr(i, selector.substr(i).indexOf('('));
+									character = {
 										value: '',
 										op: 'NTH'
-									}
-									i = parseNth(i+11, selector, character);
-									character = character.value;
+									};
+									i = parseNth(i + nth.length + 1, selector, character);
+									character = {
+										value: nth,
+										content: character.value
+									};
 									type = _LL.NTH;
+								}
+								else if (selector.substr(i +1, 2) == 'eq') {
+									var eq = selector.substr(i, selector.substr(i).indexOf('('));
+									character = {
+										value: '',
+										op: 'EQ'
+									};
+									i = parseNth(i + eq.length + 1, selector, character);
+									character = {
+										value: eq,
+										content: character.value
+									};
+									type = _LL.PSCLS;
+								}
+								else if (selector.substr(i +1, 2) == 'lt') {
+									var lt = selector.substr(i, selector.substr(i).indexOf('('));
+									character = {
+										value: '',
+										op: 'LT'
+									};
+									i = parseNth(i + lt.length + 1, selector, character);
+									character = {
+										value: lt,
+										content: (character.value || 0) * 1 - 1
+									};
+									type = _LL.PSCLS;
+								}
+								else if (selector.substr(i +1, 2) == 'gt') {
+									var gt = selector.substr(i, selector.substr(i).indexOf('('));
+									character = {
+										value: '',
+										op: 'GT'
+									};
+									i = parseNth(i + gt.length + 1, selector, character);
+									character = {
+										value: gt,
+										content: (character.value || 0) * 1 + 1
+									};
+									type = _LL.PSCLS;
 								}
 								else {
 									type = _LL.PSCLS;
@@ -247,10 +308,10 @@
 							break;
 						}
 					}
-					if (character.content) {
+					if (character.content != undefined) {
 						selectorStack.push({
 							type: type,
-							value: character.value || character,
+							value: character.value != undefined ? character.value : character,
 							content: character.content
 						});
 					}
